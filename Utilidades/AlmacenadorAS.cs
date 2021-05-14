@@ -26,6 +26,7 @@ namespace PeliculasApi.Utilidades
             var extension = Path.GetExtension(archivo.FileName);
             var archivoNombre = $"{Guid.NewGuid()}{extension}";
             var blob = cliente.GetBlobClient(archivoNombre);
+            await blob.UploadAsync(archivo.OpenReadStream());
             return blob.Uri.ToString();
         }
         public async Task BorrarArchivo(string contenedor, string ruta)
