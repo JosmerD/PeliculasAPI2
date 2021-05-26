@@ -57,6 +57,15 @@ namespace PeliculasApi.Controllers
 
 
         }
+        [HttpGet("todos")] //la url queda api/genero
+        public async Task<ActionResult<List<GeneroDTO>>> Todos()
+        {
+            var generos = await context.Generos.ToListAsync();
+            return mapper.Map<List<GeneroDTO>>(generos);
+
+
+
+        }
         //[HttpGet("{Id:int}/{nombre=Josmer}")]
         [HttpGet("{Id:int}")]
         //public Genero Get(int Id,string nombre) //se coloca actionresult para que retorne un 404, no se puede crear un metodo de una clase para retornar un 404

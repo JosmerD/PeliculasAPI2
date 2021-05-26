@@ -4,12 +4,14 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using NetTopologySuite;
 using NetTopologySuite.Geometries;
@@ -18,7 +20,9 @@ using PeliculasApi.Repositorio;
 using PeliculasApi.Utilidades;
 using System;
 using System.Collections.Generic;
+using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
+using System.Text;
 using System.Threading.Tasks;
 
 namespace PeliculasApi
@@ -27,6 +31,7 @@ namespace PeliculasApi
     {
         public Startup(IConfiguration configuration)
         {
+            JwtSecurityTokenHandler.DefaultInboundClaimTypeMap.Clear();
             Configuration = configuration;
         }
 
@@ -61,7 +66,21 @@ namespace PeliculasApi
                     .WithExposedHeaders(new string[] { "cantidadTotalRegistros" });
                 });
             });
-            services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJwtBearer();   
+
+            services.AddIdentity<IdentityUser, IdentityRole>()
+                .AddEntityFrameworkStores<ApplicationDbContext>()
+                .AddDefaultTokenProviders();
+
+            services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJwtBearer(opciones=>opciones.TokenValidationParameters= new TokenValidationParameters
+            { 
+                ValidateIssuer=false,
+                ValidateAudience=false,
+                ValidateLifetime=true,
+                ValidateIssuerSigningKey=true,
+                IssuerSigningKey= new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Configuration["llavejwt"])),
+                ClockSkew=TimeSpan.Zero
+            });   
+
             services.AddControllers(options=>
             {
                 options.Filters.Add(typeof(FiltrosDeExcepcion));

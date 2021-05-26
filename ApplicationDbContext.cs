@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore;
 using PeliculasApi.Entidades;
 using System;
 using System.Collections.Generic;
@@ -7,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace PeliculasApi
 {
-    public class ApplicationDbContext:DbContext
+    public class ApplicationDbContext:IdentityDbContext
     {
         public ApplicationDbContext(DbContextOptions options) : base(options)
         {
@@ -21,6 +22,7 @@ namespace PeliculasApi
                 .HasKey(x => new { x.PeliculaId,x.GeneroId });
             modelBuilder.Entity<PeliculasCines>()
                 .HasKey(x => new {x.PeliculaId,x.CineId });
+            base.OnModelCreating(modelBuilder);
         }
         public DbSet<Genero> Generos { get; set; }
         public DbSet<Actor> Actores { get; set; }
@@ -29,7 +31,7 @@ namespace PeliculasApi
         public DbSet<PeliculasActores> PeliculasActores { get; set; }
         public DbSet<PeliculasGeneros> PeliculasGeneros { get; set; }
         public DbSet<PeliculasCines> PeliculasCines { get; set; }
-
+         public DbSet<Rating> Ratings { get; set; }
 
 
     }

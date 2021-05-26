@@ -21,7 +21,7 @@ namespace PeliculasApi.DTOs
         public string Trailer { get; set; }
         public IFormFile Poster { get; set; }
         [ModelBinder(BinderType =typeof(TypeBinder<List<int>>))]
-        public List<int> GenrosIds { get; set; }
+        public List<int> GenerosIds { get; set; }
         [ModelBinder(BinderType = typeof(TypeBinder<List<int>>))]
         public List<int> CinesIds { get; set; }
 
