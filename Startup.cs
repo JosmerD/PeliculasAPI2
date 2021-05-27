@@ -79,7 +79,12 @@ namespace PeliculasApi
                 ValidateIssuerSigningKey=true,
                 IssuerSigningKey= new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Configuration["llavejwt"])),
                 ClockSkew=TimeSpan.Zero
-            });   
+            });
+
+            services.AddAuthorization(opciones =>
+            {
+                opciones.AddPolicy("EsAdmin", policy => policy.RequireClaim("role", "admin"));
+            });
 
             services.AddControllers(options=>
             {

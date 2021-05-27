@@ -16,7 +16,7 @@ namespace PeliculasApi.Controllers
 {
     [Route("api/peliculas")]
     [ApiController]
-    [Authorize(AuthenticationSchemes =JwtBearerDefaults.AuthenticationScheme)]
+    [Authorize(AuthenticationSchemes =JwtBearerDefaults.AuthenticationScheme,Policy ="EsAdmin")]
     public class PeliculasController : ControllerBase
     {
         private readonly ApplicationDbContext context;
@@ -44,11 +44,14 @@ namespace PeliculasApi.Controllers
             {
                 return NotFound();
             }
+           
             var promedioVoto = 0.0;
             var usuarioVoto = 0;
+            
             if (await context.Ratings.AnyAsync(x=>x.PeliculaId==id))
             {
-                promedioVoto = await context.Ratings.Where(x => x.PeliculaId == id).AverageAsync(x => x.Puntuacion);
+                promedioVoto = await context.Ratings.Where(x => x.PeliculaId == id)
+                    .AverageAsync(x => x.Puntuacion);
 
                 if (HttpContext.User.Identity.IsAuthenticated)
                 {
