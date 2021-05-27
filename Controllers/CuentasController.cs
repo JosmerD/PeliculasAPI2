@@ -54,7 +54,7 @@ namespace PeliculasApi.Controllers
 
         }
        [HttpGet("listadoUsuarios")]
-     //   [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "EsAdmin")]
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "EsAdmin")]
         public async Task<ActionResult<List<UsuarioDTO>>> ListadoUsuarios([FromQuery] PaginacionDTO paginacionDTO)
        {
             var queryable = context.Users.AsQueryable();
